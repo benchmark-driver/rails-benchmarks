@@ -1,0 +1,35 @@
+-# actionpack/lib/action_dispatch/journey/visualizer/index.html.erb
+!!!
+%html
+  %body
+    %title= title
+    %link{href: "https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css", rel: "stylesheet", type: "text/css"}/
+    %style
+      - stylesheets.each do |style|
+        = style
+    %script{src: "https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js", type: "text/javascript"}
+    #wrapper
+      %h1 Routes FSM with NFA simulation
+      .instruction.form
+        %p
+          Type a route in to the box and click "simulate".
+        %form{onsubmit: "return match(this.route.value);"}
+          %input{name: "route", size: "30", type: "text", value: "/articles/new"}/
+          %button simulate
+          %input{onclick: "return reset_graph();", type: "reset", value: "reset"}/
+        %p.fun_routes
+          Some fun routes to try:
+          - fun_routes.each do |path|
+            %a{href: "#", onclick: "document.forms[0].elements[0].value=this.text.replace(/^\\s+|\\s+$/g,''); return match(this.text.replace(/^\\s+|\\s+$/g,''));"}
+              = path
+      #chart-2.chart
+        = svg
+      .instruction
+        %p
+          This is a FSM for a system that has the following routes:
+        %ul
+          - paths.each do |route|
+            %li= route
+    - javascripts.each do |js|
+      :javascript
+        #{js}
