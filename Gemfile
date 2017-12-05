@@ -5,4 +5,9 @@ gem 'rails', '~> 4.2'
 
 gem 'benchmark_driver'
 gem 'haml'
+gem 'hamlit'
 gem 'slim'
+
+group :development do
+  gem 'pry'
+end

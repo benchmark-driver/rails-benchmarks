@@ -1,0 +1,28 @@
+loop_count: 30000
+prelude: |
+  require 'action_view'
+  require 'action_dispatch/http/mime_type'
+  require 'hamlit'
+  require 'hamlit/rails_template'
+  require 'slim'
+
+  class Context < ActionView::Base
+    def title; 'title'; end
+    def stylesheets; ['width: 100px;']; end
+    def fun_routes; ['/']; end
+    def svg; 'svg'; end
+    def paths; ['/']; end
+    def javascripts; ['document']; end
+  end
+
+  renderer = ActionView::Renderer.new(
+    ActionView::LookupContext.new(
+      ActionView::PathSet.new([File.join(__dir__, 'files')])
+    )
+  )
+  context = Context.new(renderer)
+
+benchmark:
+  erubis: "renderer.render(context, template: 'erb')"
+  hamlit: "renderer.render(context, template: 'haml')"
+  slim: "renderer.render(context, template: 'slim')"
