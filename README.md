@@ -4,17 +4,22 @@ Rails benchmark scripts for benchmark\_driver.gem
 
 ## Usage
 
-`--dir` option is required for some benchmarks. Use other options as you like.
+`bin/bench` is a wrapper of `benchmark-driver` command.
+
+See `benchmark-driver -h` (or `bin/bench -h`) for available options.
 
 ```bash
-$ be benchmark-driver actionview/render_html.yml --dir --compare --rbenv '2.0.0;2.4.2' --filter erb
+$ RBENV_VERSION=2.0.0-p0 bundle install
+$ RBENV_VERSION=2.4.2 bundle install
+$ bin/bench actionview/render_html.yml --rbenv '2.0.0-p0;2.4.2' --filter erb
 Calculating -------------------------------------
-                          2.0.0       2.4.2
-                 erb    22.419k     35.266k i/s -     20.000k in 0.892102s 0.567126s
+                       2.0.0-p0       2.4.2
+                 erb    24.773k     33.160k i/s -     20.000k in 0.807339s 0.603131s
 
 Comparison:
-         erb (2.4.2):     35265.5 i/s
-         erb (2.0.0):     22419.0 i/s - 1.57x  slower
+         erb (2.4.2):     33160.3 i/s
+      erb (2.0.0-p0):     24772.7 i/s - 1.34x  slower
+
 ```
 
 ## License
