@@ -24,6 +24,7 @@ prelude: |
   context = Context.new(renderer)
 
 benchmark:
+  # Actually erubis, but just "erb" would be easier to understand for many people
   erb: "renderer.render(context, template: 'erb')"
   haml: "renderer.render(context, template: 'haml')"
   slim: "renderer.render(context, template: 'slim')"

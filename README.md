@@ -50,6 +50,23 @@ Comparison:
      slim (2.0.0-p0):     26552.1 i/s - 1.85x  slower
 ```
 
+```
+$ bin/bench actionview/render_json.yml --rbenv '2.0.0-p0;2.4.2;2.5.0-dev'
+Calculating -------------------------------------
+                       2.0.0-p0       2.4.2   2.5.0-dev
+                  jb     2.390k      3.494k      3.584k i/s -      2.000k in 0.836798s 0.572444s 0.557989s
+            jbuilder     1.270k      1.764k      1.817k i/s -      2.000k in 1.575066s 1.134067s 1.100700s
+
+Comparison:
+      jb (2.5.0-dev):      3584.3 i/s
+          jb (2.4.2):      3493.8 i/s - 1.03x  slower
+       jb (2.0.0-p0):      2390.1 i/s - 1.50x  slower
+jbuilder (2.5.0-dev):      1817.0 i/s - 1.97x  slower
+    jbuilder (2.4.2):      1763.6 i/s - 2.03x  slower
+ jbuilder (2.0.0-p0):      1269.8 i/s - 2.82x  slower
+
+```
+
 ## License
 
 MIT License

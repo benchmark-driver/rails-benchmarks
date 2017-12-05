@@ -1,0 +1,31 @@
+# From Examples in README.md of amatsuda/jb
+json = {
+  content: format_content(@message.content),
+  created_at: @message.created_at,
+  updated_at: @message.updated_at,
+  author: {
+    name: @message.creator.name.familiar,
+    email_address: @message.creator.email_address_with_name,
+    url: url_for(@message.creator, format: :json)
+  }
+}
+
+if current_user.admin?
+  json[:visitors] = calculate_visitors(@message)
+end
+
+json[:comments] = @message.comments.map do |comment|
+  {
+    content: comment.content,
+    created_at: comment.created_at
+  }
+end
+
+json[:attachments] = @message.attachments.map do |attachment|
+  {
+    filename: attachment.filename,
+    url: url_for(attachment)
+  }
+end
+
+json

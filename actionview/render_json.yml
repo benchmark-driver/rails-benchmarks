@@ -1,0 +1,58 @@
+loop_count: 2000
+prelude: |
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.4.0')
+    require File.join(File.expand_path(__dir__), 'files', 'nokogiri_patch')
+  end
+
+  require 'action_view'
+  require 'action_dispatch/http/mime_type'
+  require 'rails'
+  require 'jbuilder'
+  require 'jb'
+  require 'jb/handler'
+  ActionView::Template.register_template_handler :jbuilder, JbuilderHandler
+  ActionView::Template.register_template_handler :jb, Jb::Handler
+
+  # TODO: use ActiveRecord?
+  Message = Struct.new(:content, :creator, :attachments, :comments, :created_at, :updated_at)
+  Comment = Struct.new(:content, :created_at)
+  Attachment = Struct.new(:filename)
+  Name = Struct.new(:name, :familiar)
+  class User < Struct.new(:admin?, :name, :email_address)
+    def email_address_with_name
+      "#{name.name} <#{email_address}>"
+    end
+  end
+
+  class Context < ActionView::Base
+    alias :format_content :simple_format
+
+    def url_for(obj, options = {})
+      "/#{obj.class.name.underscore}?format=#{options[:format]}"
+    end
+
+    def current_user
+      @current_user ||= User.new(true, Name.new('T', 'K'), 'e@mail.com')
+    end
+
+    def calculate_visitors(message)
+      message.comments.size
+    end
+  end
+
+  renderer = ActionView::Renderer.new(
+    ActionView::LookupContext.new(
+      ActionView::PathSet.new([File.join(__dir__, 'files')])
+    )
+  )
+  context = Context.new(renderer)
+
+  attachments = 10.times.map { |i| Attachment.new("f#{i}") }
+  user = User.new(true, Name.new('T', 'K'), 'e@mail.com')
+  comments = [Comment.new('wow', Time.now), Comment.new('nice', Time.now)]
+  message = Message.new("# hello\nworld", user, attachments, comments, Time.now, Time.now)
+  context.instance_variable_set(:@message, message)
+
+benchmark:
+  jb: "renderer.render(context, template: 'jb')"
+  jbuilder: "renderer.render(context, template: 'jbuilder')"
